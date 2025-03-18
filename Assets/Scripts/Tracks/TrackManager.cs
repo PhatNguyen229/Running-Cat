@@ -7,6 +7,8 @@ using UnityEngine.Analytics;
 using UnityEngine.ResourceManagement;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using GameObject = UnityEngine.GameObject;
+using Random = UnityEngine.Random;
+using System;
 
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;
@@ -251,9 +253,12 @@ public class TrackManager : MonoBehaviour
 #endif
         }
 
-        characterController.Begin();
-        StartCoroutine(WaitToStart());
-        isLoaded = true;
+        StartCoroutine(PrespawnSegment(() =>
+        {
+            characterController.Begin();
+            StartCoroutine(WaitToStart());
+            isLoaded = true;
+        }));
     }
 
     public void End()
@@ -543,6 +548,16 @@ public class TrackManager : MonoBehaviour
         m_Segments.Add(newSegment);
 
         if (newSegmentCreated != null) newSegmentCreated.Invoke(newSegment);
+    }
+
+    private IEnumerator PrespawnSegment(Action doneAction)
+    {
+        while (_spawnedSegments < (m_IsTutorial ? 4 : k_DesiredSegmentCount))
+        {
+            yield return SpawnNewSegment();
+            _spawnedSegments++;
+        }
+        doneAction?.Invoke();
     }
 
 

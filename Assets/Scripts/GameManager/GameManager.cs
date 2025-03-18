@@ -45,13 +45,13 @@ public class GameManager : MonoBehaviour
         PushState(states[0].GetName());
     }
 
-    //protected void Update()
-    //{
-    //    if(m_StateStack.Count > 0)
-    //    {
-    //        m_StateStack[m_StateStack.Count - 1].Tick();
-    //    }
-    //}
+    protected void Update()
+    {
+        if (m_StateStack.Count > 0)
+        {
+            m_StateStack[m_StateStack.Count - 1].Tick();
+        }
+    }
 
     protected void OnApplicationQuit()
     {
